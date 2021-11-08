@@ -9,11 +9,10 @@
       会員情報入力
     </h1>
   </div>
-  <%# 次はここから %>
-  <% unless @user.save %>
-  <%= render 'shared/error_messages', model: f.object %>
-  <% end %>
-  <%# 次はここから %>
+
+  <%# インスタンスを渡して、エラー発生時にメッセージが表示されるようにしましょう。%>
+  <%= render 'shared/error_messages', model: f.object, locals: {model: @user} %>
+  <%# //インスタンスを渡して、エラー発生時にメッセージが表示されるようにしましょう。%>
 
   <div class="form-group">
     <div class='form-text-wrap'>
