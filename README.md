@@ -29,7 +29,7 @@
 | status_id          | integer    | null: false                      |
 | fee_id             | integer    | null: false                      |
 | place_id           | integer    | null: false                      |
-| ship_date_id       | integer    | null: false                      |
+| arrive_id       | integer    | null: false                      |
 | price              | integer    | null: false                      |
 | user               | references | null: false, foreign_key: true   |                   
   
