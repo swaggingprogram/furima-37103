@@ -10,7 +10,8 @@ class Item < ApplicationRecord
 
   validates :name, presence: true
   validates :content, presence: true
-  validates :price, presence: true, numericality: { less_than_or_equal_to: 300, greater_than_or_equal_to: 9999999 }
+  validates :price, presence: true, numericality: { less_than_or_equal_to: 9999999, greater_than_or_equal_to: 300 }
+  validates :image, presence: true
   validates :user, presence: true
 
   validates :category_id, numericality: {other_than: 1, message: "can't be blank"}
