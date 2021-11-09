@@ -27,8 +27,18 @@ RSpec.describe Item, type: :model do
         @item.valid?
         expect(@item.errors.full_messages).to include("Category can't be blank")
       end
+      it 'カテゴリーが1だと出品できない' do
+        @item.category_id = '1'
+        @item.valid?
+        expect(@item.errors.full_messages).to include("Category can't be blank")
+      end
       it '商品の状態がないと出品できない' do
         @item.status_id = ''
+        @item.valid?
+        expect(@item.errors.full_messages).to include("Status can't be blank")
+      end
+      it '商品の状態が1だと出品できない' do
+        @item.status_id = '1'
         @item.valid?
         expect(@item.errors.full_messages).to include("Status can't be blank")
       end
@@ -37,13 +47,28 @@ RSpec.describe Item, type: :model do
         @item.valid?
         expect(@item.errors.full_messages).to include("Fee can't be blank")
       end
+      it '配送料の負担が1だと出品できない' do
+        @item.fee_id = '1'
+        @item.valid?
+        expect(@item.errors.full_messages).to include("Fee can't be blank")
+      end
       it '発送元の地域がないと出品できない' do
         @item.place_id = ''
         @item.valid?
         expect(@item.errors.full_messages).to include("Place can't be blank")
       end
+      it '発送元の地域が1だと出品できない' do
+        @item.place_id = '1'
+        @item.valid?
+        expect(@item.errors.full_messages).to include("Place can't be blank")
+      end
       it '発送までの日数がないと出品できない' do
         @item.arrive_id = ''
+        @item.valid?
+        expect(@item.errors.full_messages).to include("Arrive can't be blank")
+      end
+      it '発送までの日数が1だと出品できない' do
+        @item.arrive_id = '1'
         @item.valid?
         expect(@item.errors.full_messages).to include("Arrive can't be blank")
       end
