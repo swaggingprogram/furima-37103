@@ -1,4 +1,8 @@
 class OrdersController < ApplicationController
+  before_action :authenticate_user!
+  before_action :after_purchase, only: [:index]
+  before_action :purchase_guard, only: [:index]
+
   def index
     @record_order = RecordOrder.new
     @item = Item.find(params[:item_id])
@@ -7,9 +11,8 @@ class OrdersController < ApplicationController
   def create
     @record_order = RecordOrder.new(order_params)
     @item = Item.find(params[:item_id])
-    binding.pry
     if @record_order.valid?
-      Payjp.api_key = "sk_test_845dc5947b7c07ab2329b71c"
+      Payjp.api_key = ENV["PAYJP_SECRET_KEY"]
       Payjp::Charge.create(
         amount: @item.price,
         card: order_params[:token],
@@ -26,5 +29,19 @@ class OrdersController < ApplicationController
   def order_params
     @item = Item.find(params[:item_id])
     params.require(:record_order).permit(:postal_code, :prefecture_id, :city, :port, :building, :tel).merge(user_id: current_user.id, item_id: @item.id, token: params[:token])
+  end
+
+  def after_purchase
+    @item = Item.find(params[:item_id])
+    if @item.record.present?
+      redirect_to root_path
+    end
+  end
+
+  def purchase_guard
+    @item = Item.find(params[:item_id])
+    if @item.user.id == current_user.id
+      redirect_to root_path
+    end
   end
 end
