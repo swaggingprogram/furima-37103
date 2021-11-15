@@ -1,7 +1,8 @@
 class ItemsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :instance, only: [:show, :edit, :update, :item_guard]
+  before_action :instance, only: [:show, :edit, :update, :item_guard, :after_purchase]
   before_action :item_guard, only: [:edit]
+  before_action :after_purchase, only: [:edit]
 
   def index
     @items = Item.all.order('created_at DESC')
@@ -50,10 +51,16 @@ class ItemsController < ApplicationController
   end
 
   def item_guard
-    unless @item.user.id == current_user.id
+    unless @item.user.id == current_user.id || @item.record.blank?
       redirect_to action: :index
     end
   end
+
+  def after_purchase
+    if @item.record.present?
+      redirect_to root_path
+    end
+    end
 
   def instance
     @item = Item.find(params[:id])

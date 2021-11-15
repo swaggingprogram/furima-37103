@@ -5,12 +5,12 @@ class OrdersController < ApplicationController
 
   def index
     @record_order = RecordOrder.new
-    @item = Item.find(params[:item_id])
+    instance
   end
 
   def create
     @record_order = RecordOrder.new(order_params)
-    @item = Item.find(params[:item_id])
+    instance
     if @record_order.valid?
       Payjp.api_key = ENV["PAYJP_SECRET_KEY"]
       Payjp::Charge.create(
@@ -27,21 +27,25 @@ class OrdersController < ApplicationController
 
   private
   def order_params
-    @item = Item.find(params[:item_id])
+    instance
     params.require(:record_order).permit(:postal_code, :prefecture_id, :city, :port, :building, :tel).merge(user_id: current_user.id, item_id: @item.id, token: params[:token])
   end
 
   def after_purchase
-    @item = Item.find(params[:item_id])
+    instance
     if @item.record.present?
       redirect_to root_path
     end
   end
 
   def purchase_guard
-    @item = Item.find(params[:item_id])
+    instance
     if @item.user.id == current_user.id
       redirect_to root_path
     end
+  end
+
+  def instance
+    @item = Item.find(params[:item_id])
   end
 end
