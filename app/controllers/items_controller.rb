@@ -23,7 +23,7 @@ class ItemsController < ApplicationController
 
   def edit
   end
-  
+
   def update
     if @item.update(item_params)
       redirect_to root_path
@@ -51,16 +51,12 @@ class ItemsController < ApplicationController
   end
 
   def item_guard
-    unless @item.user.id == current_user.id || @item.record.blank?
-      redirect_to action: :index
-    end
+    redirect_to action: :index unless @item.user.id == current_user.id || @item.record.blank?
   end
 
   def after_purchase
-    if @item.record.present?
-      redirect_to root_path
-    end
-    end
+    redirect_to root_path if @item.record.present?
+  end
 
   def instance
     @item = Item.find(params[:id])

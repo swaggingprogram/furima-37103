@@ -5,7 +5,7 @@ class Item < ApplicationRecord
   belongs_to :place
   belongs_to :arrive
   belongs_to :status
-  
+
   belongs_to :user
   has_one_attached :image
   has_one :record

@@ -12,7 +12,7 @@ class OrdersController < ApplicationController
     @record_order = RecordOrder.new(order_params)
     instance
     if @record_order.valid?
-      Payjp.api_key = ENV["PAYJP_SECRET_KEY"]
+      Payjp.api_key = ENV['PAYJP_SECRET_KEY']
       Payjp::Charge.create(
         amount: @item.price,
         card: order_params[:token],
@@ -20,29 +20,28 @@ class OrdersController < ApplicationController
       )
       @record_order.save
       redirect_to root_path
-    else 
+    else
       render :index
     end
-  end  
+  end
 
   private
+
   def order_params
     instance
-    params.require(:record_order).permit(:postal_code, :prefecture_id, :city, :port, :building, :tel).merge(user_id: current_user.id, item_id: @item.id, token: params[:token])
+    params.require(:record_order).permit(:postal_code, :prefecture_id, :city, :port, :building, :tel).merge(
+      user_id: current_user.id, item_id: @item.id, token: params[:token]
+    )
   end
 
   def after_purchase
     instance
-    if @item.record.present?
-      redirect_to root_path
-    end
+    redirect_to root_path if @item.record.present?
   end
 
   def purchase_guard
     instance
-    if @item.user.id == current_user.id
-      redirect_to root_path
-    end
+    redirect_to root_path if @item.user.id == current_user.id
   end
 
   def instance
