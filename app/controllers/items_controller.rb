@@ -51,11 +51,15 @@ class ItemsController < ApplicationController
   end
 
   def item_guard
-    redirect_to action: :index unless @item.user.id == current_user.id || @item.record.blank?
+    unless @item.user.id == current_user.id
+      redirect_to action: :index 
+    end
   end
 
   def after_purchase
-    redirect_to root_path if @item.record.present?
+    if @item.record.present?
+      redirect_to root_path 
+    end
   end
 
   def instance
